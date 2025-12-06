@@ -1,5 +1,5 @@
 import Modal from '@/components/Modal/Modal';
-import NoteDetailsClient from '@/app/(public routes)/notes/[id]/NoteDetails.client';
+import NoteDetailsClient from '@/app/notes/[id]/NoteDetails.client';
 
 export default function NotePreviewModal() {
   return (
