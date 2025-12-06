@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useParams } from 'next/navigation';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import { Toaster } from 'react-hot-toast';
@@ -12,7 +13,19 @@ import Modal from '@/components/Modal/Modal';
 import NoteForm from '@/components/NoteForm/NoteForm';
 import css from './NotesPage.module.css';
 
-function NotesClient() {
+interface NotesClientProps {
+  initialTag?: string;
+}
+
+function NotesClient({ initialTag }: NotesClientProps) {
+  const params = useParams();
+
+  const tag = Array.isArray(params.tag)
+    ? params.tag[0] === 'all'
+      ? undefined
+      : params.tag[0]
+    : initialTag;
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,12 +35,13 @@ function NotesClient() {
   const closeModal = () => setIsModalOpen(false);
 
   const { data: notesData } = useQuery({
-    queryKey: ['notes', currentPage, debouncedSearchTerm],
+    queryKey: ['notes', currentPage, debouncedSearchTerm, tag],
     queryFn: () =>
       fetchNotes({
         page: currentPage,
         perPage: 12,
         search: debouncedSearchTerm,
+        tag: tag,
       }),
     placeholderData: keepPreviousData,
   });
@@ -62,7 +76,7 @@ function NotesClient() {
       </header>
       {notes.length > 0 && <NoteList notes={notes} />}
       {isModalOpen && (
-        <Modal onClose={closeModal}>
+        <Modal>
           <NoteForm onSuccess={closeModal} onCancel={closeModal} />
         </Modal>
       )}
