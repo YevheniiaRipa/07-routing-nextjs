@@ -8,7 +8,7 @@ import NotesClient from './Notes.client';
 
 interface FilteredNotesPageProps {
   params: Promise<{
-    tag?: string[];
+    slug?: string[];
   }>;
 }
 
@@ -19,7 +19,7 @@ export default async function FilteredNotesPage({
 
   const queryClient = new QueryClient();
   const tag =
-    resolvedParams.tag?.[0] === 'all' ? undefined : resolvedParams.tag?.[0];
+    resolvedParams.slug?.[0] === 'all' ? undefined : resolvedParams.slug?.[0];
 
   await queryClient.prefetchQuery({
     queryKey: ['notes', 1, tag || ''],

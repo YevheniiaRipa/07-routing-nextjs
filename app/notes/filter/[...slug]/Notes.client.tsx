@@ -20,10 +20,10 @@ interface NotesClientProps {
 function NotesClient({ initialTag }: NotesClientProps) {
   const params = useParams();
 
-  const tag = Array.isArray(params.tag)
-    ? params.tag[0] === 'all'
+  const tag = Array.isArray(params.slug)
+    ? params.slug[0] === 'all'
       ? undefined
-      : params.tag[0]
+      : params.slug[0]
     : initialTag;
 
   const [currentPage, setCurrentPage] = useState(1);
