@@ -1,10 +1,29 @@
-import Modal from '@/components/Modal/Modal';
-import NoteDetailsClient from '@/app/notes/[id]/NoteDetails.client';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
+import { fetchNoteById } from '@/lib/api';
+import NotePreview from './NotePreview.client';
 
-export default function NotePreviewModal() {
+interface NotePreviewModalProps {
+  params: Promise<{ id: string }>;
+}
+
+async function NotePreviewModal({ params }: NotePreviewModalProps) {
+  const queryClient = new QueryClient();
+  const { id } = await params;
+
+  await queryClient.prefetchQuery({
+    queryKey: ['note', id],
+    queryFn: () => fetchNoteById(id),
+  });
+
   return (
-    <Modal>
-      <NoteDetailsClient />
-    </Modal>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NotePreview />
+    </HydrationBoundary>
   );
 }
+
+export default NotePreviewModal;

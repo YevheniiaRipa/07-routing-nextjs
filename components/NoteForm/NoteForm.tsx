@@ -26,11 +26,10 @@ const validationSchema = Yup.object().shape({
 });
 
 interface NoteFormProps {
-  onSuccess: () => void;
-  onCancel: () => void;
+  onClose: () => void;
 }
 
-function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
+function NoteForm({ onClose }: NoteFormProps) {
   const queryClient = useQueryClient();
 
   const { mutate: createNoteMutation, isPending } = useMutation({
@@ -42,7 +41,7 @@ function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['notes'] });
         toast.success('Note created successfully!');
-        onSuccess();
+        onClose();
       },
       onError: () => {
         toast.error(
@@ -102,7 +101,7 @@ function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
           />
         </div>
         <div className={css.actions}>
-          <button type="button" className={css.cancelButton} onClick={onCancel}>
+          <button type="button" className={css.cancelButton} onClick={onClose}>
             Cancel
           </button>
           <button

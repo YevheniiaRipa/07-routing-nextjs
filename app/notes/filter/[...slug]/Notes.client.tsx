@@ -76,8 +76,8 @@ function NotesClient({ initialTag }: NotesClientProps) {
       </header>
       {notes.length > 0 && <NoteList notes={notes} />}
       {isModalOpen && (
-        <Modal>
-          <NoteForm onSuccess={closeModal} onCancel={closeModal} />
+        <Modal onClose={closeModal}>
+          <NoteForm onClose={closeModal} />
         </Modal>
       )}
     </div>
