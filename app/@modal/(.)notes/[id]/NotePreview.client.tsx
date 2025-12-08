@@ -1,12 +1,18 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { fetchNoteById } from '@/lib/api';
+import Modal from '@/components/Modal/Modal';
 import css from './NotePreview.module.css';
 
-function NotePreviewClient() {
+function NotePreview() {
+  const router = useRouter();
   const { id } = useParams<{ id: string }>();
+
+  const handleClose = () => {
+    router.back();
+  };
 
   const {
     data: note,
@@ -28,19 +34,38 @@ function NotePreviewClient() {
   }
 
   return (
-    <div className={css.container}>
-      <div className={css.item}>
-        <div className={css.header}>
-          <h2>{note.title}</h2>
-          {note.tag && <span className={css.tag}>{note.tag}</span>}
+    <Modal onClose={handleClose}>
+      <div className={css.container}>
+        <div className={css.item}>
+          <div className={css.header}>
+            <h2>{note.title}</h2>
+            {note.tag && <span className={css.tag}>{note.tag}</span>}
+          </div>
+          <p className={css.content}>{note.content}</p>
+          <p className={css.date}>
+            {new Date(note.createdAt).toLocaleDateString()}
+          </p>
         </div>
-        <p className={css.content}>{note.content}</p>
-        <p className={css.date}>
-          {new Date(note.createdAt).toLocaleDateString()}
-        </p>
       </div>
-    </div>
+    </Modal>
   );
 }
 
-export default NotePreviewClient;
+export default NotePreview;
+
+// ('use client');
+
+// import { useRouter } from 'next/navigation';
+// import Modal from '@/components/Modal/Modal';
+// import NoteDetailsClient from '@/app/notes/[id]/NoteDetails.client';
+// export default function NotePreview() {
+//   const router = useRouter();
+//   const handleClose = () => {
+//     router.back();
+//   };
+//   return (
+//     <Modal onClose={handleClose}>
+//       <NoteDetailsClient />
+//     </Modal>
+//   );
+// }
